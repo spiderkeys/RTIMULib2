@@ -23,7 +23,7 @@
 
 #include "RTMath.h"
 #ifdef WIN32
-#include <qdatetime.h>
+  #include <chrono>
 #endif
 
 //  Strings are put here. So the display functions are no re-entrant!
@@ -33,8 +33,9 @@ char RTMath::m_string[1000];
 uint64_t RTMath::currentUSecsSinceEpoch()
 {
 #ifdef WIN32
-#include <qdatetime.h>
-    return QDateTime::currentMSecsSinceEpoch();
+    auto since_epoch = std::chrono::system_clock::now().time_since_epoch();
+    auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(since_epoch).count();
+    return (unsigned) (long) millis;
 #else
     struct timeval tv;
 
